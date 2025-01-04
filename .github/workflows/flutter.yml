@@ -1,0 +1,39 @@
+name: Build Flutter APK
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # You can also use macos-latest for macOS-based builds
+    
+    steps:
+    # Checkout the repository
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    # Set up Flutter
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: 'stable'  # You can specify a specific version, e.g., '2.10.5'
+
+    # Install dependencies
+    - name: Install Dependencies
+      run: flutter pub get
+
+    # Build APK
+    - name: Build APK
+      run: flutter build apk --release
+    
+    # Upload the APK as an artifact
+    - name: Upload APK
+      uses: actions/upload-artifact@v2
+      with:
+        name: app-release.apk
+        path: build/app/outputs/flutter-apk/app-release.apk
